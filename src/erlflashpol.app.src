@@ -1,0 +1,7 @@
+{application, erlflashpol,
+ [{description, "Erlang flash policy server"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {mod, {erlflashpol_app, []}},
+  {env, []}]}.
