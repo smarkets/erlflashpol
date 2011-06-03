@@ -2,7 +2,12 @@
 
 -export([start_link/1, init/1, acceptor/1]).
 
--define(TCP_OPTIONS, [binary, {active, false}, {reuseaddr, true}, {backlog, 1024}, {packet, raw}]).
+-define(TCP_OPTIONS,
+        [binary,
+         {active, false},
+         {reuseaddr, true},
+         {backlog, 1024},
+         {packet, raw}]).
 
 start_link(Port) ->
     Pid = proc_lib:spawn_link(?MODULE, init, [Port]),

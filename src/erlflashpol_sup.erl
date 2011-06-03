@@ -2,20 +2,21 @@
 
 -behaviour(supervisor).
 
--export([start_link/0]).
+-export([start_link/2]).
 
 -export([init/1]).
 
--define(LISTEN_PORT, 8843). % TODO: config
+start_link(Port, Filename) ->
+    supervisor:start_link({local, ?MODULE}, ?MODULE, [Port, Filename]).
 
-start_link() ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
-
-init([]) ->
+init([Port, Filename]) ->
     Children =
         [{erlflashpol_acceptor,
-          {erlflashpol_acceptor, start_link, [?LISTEN_PORT]},
+          {erlflashpol_acceptor, start_link, [Port]},
           permanent, 5000, worker, [erlflashpol_acceptor]},
+         {erlflashpol_policy_server,
+          {erlflashpol_policy_server, start_link, [Filename]},
+          permanent, brutal_kill, worker, [erlflashpol_policy_server]},
          {erlflashpol_server_sup,
           {erlflashpol_server_sup, start_link, []},
           permanent, 5000, supervisor, [erlflashpol_server_sup]}],

@@ -6,12 +6,8 @@
 
 -export([init/1]).
 
-start_link() ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
-
-start_child(Socket) ->
-    error_logger:info_msg("Starting a child..~n"),
-    supervisor:start_child(?MODULE, [Socket]).
+start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+start_child(Socket) -> supervisor:start_child(?MODULE, [Socket]).
 
 init([]) ->
     Children =

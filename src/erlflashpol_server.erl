@@ -1,6 +1,6 @@
 -module(erlflashpol_server).
 
--export([start_link/1, loop/2]).
+-export([start_link/1, loop/1]).
 
 -define(GENERIC_POLICY_FILE,
         "<?xml version=\"1.0\"?>"
@@ -10,14 +10,15 @@
         "</cross-domain-policy>\0").
 
 start_link(Socket) ->
-    Pid = spawn_link(?MODULE, loop, [Socket, list_to_binary(?GENERIC_POLICY_FILE)]),
+    Pid = spawn_link(?MODULE, loop, [Socket]),
     {ok, Pid}.
 
-loop(Socket, File) ->
+loop(Socket) ->
     case gen_tcp:recv(Socket, 22) of
         {ok, <<"<policy-file-request/>">>} ->
+            {ok, File} = erlflashpol_policy_server:policy_file(),
             gen_tcp:send(Socket, File),
-            ?MODULE:loop(Socket, File);
+            ?MODULE:loop(Socket);
         {ok, _Data} ->
             ok = gen_tcp:close(Socket);
         {error, closed} ->
