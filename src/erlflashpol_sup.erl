@@ -2,17 +2,17 @@
 
 -behaviour(supervisor).
 
--export([start_link/2]).
+-export([start_link/3]).
 
 -export([init/1]).
 
-start_link(Port, Filename) ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, [Port, Filename]).
+start_link(ListenIp, Port, Filename) ->
+    supervisor:start_link({local, ?MODULE}, ?MODULE, [ListenIp, Port, Filename]).
 
-init([Port, Filename]) ->
+init([ListenIp, Port, Filename]) ->
     Children =
         [{erlflashpol_acceptor,
-          {erlflashpol_acceptor, start_link, [Port]},
+          {erlflashpol_acceptor, start_link, [ListenIp, Port]},
           permanent, 5000, worker, [erlflashpol_acceptor]},
          {erlflashpol_policy_server,
           {erlflashpol_policy_server, start_link, [Filename]},
