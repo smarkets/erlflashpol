@@ -4,4 +4,4 @@
   {registered, []},
   {applications, [kernel, stdlib]},
   {mod, {erlflashpol_app, []}},
-  {env, []}]}.
+  {env, [{listen_ip, "0.0.0.0"}, {listen_port, 8843}, {policy_file, liberal}]}]}.
